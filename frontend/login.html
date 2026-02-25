@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Masket</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <!-- LEFT PANEL -->
+  <div class="auth-panel-left">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(circle at 30% 70%,rgba(23,85,244,0.3) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(68,120,255,0.2) 0%,transparent 40%);"></div>
+    <div class="auth-brand">
+      <div class="logo"><i class="ri-shopping-bag-3-fill" style="color:var(--blue-light)"></i> Mas<span>ket</span></div>
+      <p>Welcome back! Sign in to continue shopping the best deals in Kenya.</p>
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.7);font-size:14px">
+          <div style="width:36px;height:36px;background:rgba(23,85,244,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#7BA7FF">
+            <i class="ri-shield-check-line"></i>
+          </div>
+          Secure JWT-based authentication
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.7);font-size:14px">
+          <div style="width:36px;height:36px;background:rgba(23,85,244,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#7BA7FF">
+            <i class="ri-truck-line"></i>
+          </div>
+          Track your orders anytime
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.7);font-size:14px">
+          <div style="width:36px;height:36px;background:rgba(23,85,244,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#7BA7FF">
+            <i class="ri-price-tag-3-line"></i>
+          </div>
+          Exclusive deals for members
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-panel-right">
+    <div class="auth-form-wrap">
+      <!-- Top bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px">
+        <a href="/index.html" style="display:flex;align-items:center;gap:6px;color:var(--text-muted);font-size:14px;text-decoration:none">
+          <i class="ri-arrow-left-line"></i> Back to Home
+        </a>
+        <button class="dark-toggle"><i class="ri-moon-line"></i></button>
+      </div>
+
+      <h2 class="auth-title">Welcome back 👋</h2>
+      <p class="auth-sub">Sign in to your Masket account</p>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div style="position:relative">
+            <i class="ri-mail-line" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px"></i>
+            <input id="login-email" type="email" class="form-control" placeholder="you@email.com" style="padding-left:38px" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display:flex;justify-content:space-between">
+            Password
+            <span style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:400">Forgot?</span>
+          </label>
+          <div style="position:relative;display:flex;align-items:center">
+            <i class="ri-lock-line" style="position:absolute;left:12px;color:var(--text-muted);font-size:16px;z-index:1"></i>
+            <input id="login-password" type="password" class="form-control" placeholder="Your password" style="padding-left:38px;padding-right:44px" required>
+            <button type="button" class="pw-toggle" style="position:absolute;right:12px;background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:18px;line-height:1">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:8px">
+          <i class="ri-login-box-line"></i> Sign In
+        </button>
+      </form>
+
+      <div class="auth-switch">
+        Don't have an account? <a href="/signup.html" style="font-weight:600">Create one</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

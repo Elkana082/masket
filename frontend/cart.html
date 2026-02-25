@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart — Masket</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/index.html" class="navbar-logo"><i class="ri-shopping-bag-3-fill"></i> Mas<span>ket</span></a>
+    <ul class="nav-links">
+      <li><a href="/index.html"><i class="ri-home-4-line"></i> Home</a></li>
+      <li><a href="/contact.html"><i class="ri-customer-service-2-line"></i> Contact</a></li>
+      <li>
+        <a href="/cart.html" class="nav-cart-badge active">
+          <i class="ri-shopping-cart-2-fill"></i> Cart
+          <span class="nav-cart-count" style="display:none">0</span>
+        </a>
+      </li>
+      <li><a href="/profile.html"><i class="ri-user-3-line"></i> My Account</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="dark-toggle"><i class="ri-moon-line"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div style="background:var(--surface);border-bottom:1px solid var(--border)">
+    <div class="container" style="padding-top:28px;padding-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 style="font-size:28px">Shopping Cart</h1>
+        <p id="cart-item-count" style="font-size:14px;color:var(--text-muted);margin-top:4px">0 items</p>
+      </div>
+      <button onclick="clearCart()" class="btn btn-ghost btn-sm" style="color:#ef4444">
+        <i class="ri-delete-bin-line"></i> Clear Cart
+      </button>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- EMPTY STATE -->
+      <div id="cart-empty" class="empty-state" style="display:none">
+        <div class="empty-icon"><i class="ri-shopping-cart-2-line"></i></div>
+        <h3>Your cart is empty</h3>
+        <p>Start shopping to add items to your cart</p>
+        <a href="/index.html" class="btn btn-primary">
+          <i class="ri-shopping-bag-3-line"></i> Browse Products
+        </a>
+      </div>
+
+      <!-- CART CONTENT -->
+      <div id="cart-content" class="cart-grid">
+        <!-- Left: Items -->
+        <div class="card" style="padding:0">
+          <div id="cart-items">
+            <!-- JS populated -->
+          </div>
+        </div>
+
+        <!-- Right: Summary -->
+        <div id="cart-summary">
+          <div class="card cart-summary-card">
+            <div class="card-header">
+              <h3 style="font-size:17px">Order Summary</h3>
+              <i class="ri-file-list-3-line" style="color:var(--text-muted)"></i>
+            </div>
+            <div class="card-body">
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="summary-subtotal" style="font-weight:600">KSh 0</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span id="summary-shipping" style="font-weight:600">KSh 0</span>
+              </div>
+              <div class="summary-row" style="margin-top:4px">
+                <span style="font-weight:700">Total</span>
+                <span id="summary-total" class="summary-total text-blue">KSh 0</span>
+              </div>
+
+              <div style="margin-top:8px;padding:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;font-size:12px;color:#16a34a;display:flex;align-items:center;gap:8px">
+                <i class="ri-truck-line"></i>
+                Free shipping on orders above KSh 5,000!
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="/checkout.html" class="btn btn-primary btn-block btn-lg">
+                <i class="ri-secure-payment-line"></i> Proceed to Checkout
+              </a>
+              <a href="/index.html" class="btn btn-ghost btn-block" style="margin-top:8px">
+                <i class="ri-arrow-left-line"></i> Continue Shopping
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/index.html" class="bnav-item"><i class="ri-home-4-line"></i> Home</a>
+    <a href="/contact.html" class="bnav-item"><i class="ri-customer-service-2-line"></i> Contact</a>
+    <a href="/cart.html" class="bnav-item active bnav-cart">
+      <i class="ri-shopping-cart-2-fill"></i>
+      <span class="bnav-cart-count" style="display:none">0</span>
+      Cart
+    </a>
+    <a href="/profile.html" class="bnav-item"><i class="ri-user-3-line"></i> Account</a>
+  </div>
+</nav>
+
+<script src="/js/api.js"></script>
+<script src="/js/cart.js"></script>
+<script>
+  document.querySelectorAll('.dark-toggle').forEach(b => b.addEventListener('click', toggleDarkMode));
+</script>
+</body>
+</html>

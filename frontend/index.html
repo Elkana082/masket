@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masket — Shop Smart, Live Better</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/index.html" class="navbar-logo">
+      <i class="ri-shopping-bag-3-fill"></i>
+      Mas<span>ket</span>
+    </a>
+
+    <!-- Category Dropdown -->
+    <div class="category-dropdown">
+      <button class="nav-links" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-size:14px;font-weight:500;transition:var(--transition)">
+        <i class="ri-apps-2-line"></i> Categories <i class="ri-arrow-down-s-line"></i>
+      </button>
+      <div class="category-dropdown-menu">
+        <a href="/category.html?cat=shoes" class="cat-menu-item"><i class="ri-footprint-line"></i> Shoes</a>
+        <a href="/category.html?cat=jewelry" class="cat-menu-item"><i class="ri-gem-line"></i> Jewelry</a>
+        <a href="/category.html?cat=clothes" class="cat-menu-item"><i class="ri-shirt-line"></i> Clothes</a>
+        <a href="/category.html?cat=electronics" class="cat-menu-item"><i class="ri-computer-line"></i> Electronics</a>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="/index.html" data-nav-link="/index.html" class="active"><i class="ri-home-4-line"></i> Home</a></li>
+      <li><a href="/contact.html" data-nav-link="/contact.html"><i class="ri-customer-service-2-line"></i> Contact</a></li>
+      <li>
+        <a href="/cart.html" data-nav-link="/cart.html" class="nav-cart-badge">
+          <i class="ri-shopping-cart-2-line"></i> Cart
+          <span class="nav-cart-count" style="display:none">0</span>
+        </a>
+      </li>
+      <li>
+        <a href="/profile.html" id="nav-auth-link" data-nav-link="/profile.html">
+          <i id="nav-auth-icon" class="ri-user-3-line"></i>
+          <span id="nav-auth-text">My Account</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="navbar-actions">
+      <button class="dark-toggle" title="Toggle dark mode"><i class="ri-moon-line"></i></button>
+      <button id="nav-logout-btn" class="btn btn-ghost btn-sm" style="display:none"><i class="ri-logout-box-line"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== PAGE WRAPPER ===== -->
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="container" style="position:relative;z-index:1;width:100%">
+      <div class="hero-content">
+        <div class="hero-label">
+          <i class="ri-fire-line"></i>
+          Kenya's #1 Marketplace
+        </div>
+        <h1>
+          Shop <em>Smarter</em>,<br>
+          Live <em>Better</em>
+        </h1>
+        <p id="hero-caption">
+          Discover thousands of brand new and refurbished products — from electronics to fashion — all at unbeatable prices. Fast delivery across Kenya.
+        </p>
+        <div class="hero-actions">
+          <a href="/category.html?cat=electronics" class="btn btn-primary btn-lg">
+            <i class="ri-shopping-bag-3-line"></i> Shop Now
+          </a>
+          <a href="/category.html?cat=shoes" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.3)">
+            <i class="ri-footprint-line"></i> Explore Categories
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">10K+</div>
+            <div class="hero-stat-label">Products</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">5K+</div>
+            <div class="hero-stat-label">Happy Buyers</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">24h</div>
+            <div class="hero-stat-label">Fast Delivery</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES STRIP -->
+  <section style="background:var(--surface);border-bottom:1px solid var(--border);padding:28px 0">
+    <div class="container">
+      <div style="display:flex;gap:16px;overflow-x:auto;padding-bottom:4px">
+        <a href="/category.html?cat=shoes" class="card" style="min-width:140px;text-align:center;padding:20px 16px;text-decoration:none;flex-shrink:0;border-radius:14px;transition:var(--transition)" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:32px;margin-bottom:8px">👟</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Shoes</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:3px">All styles</div>
+        </a>
+        <a href="/category.html?cat=jewelry" class="card" style="min-width:140px;text-align:center;padding:20px 16px;text-decoration:none;flex-shrink:0;border-radius:14px;transition:var(--transition)" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:32px;margin-bottom:8px">💎</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Jewelry</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:3px">Gold & Silver</div>
+        </a>
+        <a href="/category.html?cat=clothes" class="card" style="min-width:140px;text-align:center;padding:20px 16px;text-decoration:none;flex-shrink:0;border-radius:14px;transition:var(--transition)" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:32px;margin-bottom:8px">👕</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Clothes</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:3px">Trending styles</div>
+        </a>
+        <a href="/category.html?cat=electronics" class="card" style="min-width:140px;text-align:center;padding:20px 16px;text-decoration:none;flex-shrink:0;border-radius:14px;transition:var(--transition)" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:32px;margin-bottom:8px">📱</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">Electronics</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:3px">Latest tech</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Featured <span>Products</span></h2>
+          <p class="section-subtitle">Hand-picked deals you'll love</p>
+        </div>
+        <a href="/category.html?cat=electronics" class="btn btn-ghost">
+          View All <i class="ri-arrow-right-line"></i>
+        </a>
+      </div>
+
+      <div id="featured-loading" class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+
+      <div id="featured-products" class="grid-4">
+        <!-- Products loaded via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY MASKET -->
+  <section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+      <div class="section-header text-center" style="justify-content:center;flex-direction:column;align-items:center">
+        <h2 class="section-title">Why Choose <span>Masket</span>?</h2>
+        <p class="section-subtitle">We make shopping safe, easy and affordable</p>
+      </div>
+      <div class="grid-4" style="margin-top:36px">
+        <div class="card" style="border-top:3px solid var(--blue)">
+          <div class="card-body" style="text-align:center;padding:28px 20px">
+            <div style="width:54px;height:54px;background:var(--blue-muted);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:var(--blue)">
+              <i class="ri-shield-check-line"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:8px">Buyer Protection</div>
+            <div style="font-size:13px;color:var(--text-muted)">Every purchase is protected. Full refund if your item doesn't arrive.</div>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid #22c55e">
+          <div class="card-body" style="text-align:center;padding:28px 20px">
+            <div style="width:54px;height:54px;background:rgba(34,197,94,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:#22c55e">
+              <i class="ri-truck-line"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:8px">Fast Delivery</div>
+            <div style="font-size:13px;color:var(--text-muted)">Orders delivered across Kenya within 1-3 business days.</div>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid #f59e0b">
+          <div class="card-body" style="text-align:center;padding:28px 20px">
+            <div style="width:54px;height:54px;background:rgba(245,158,11,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:#f59e0b">
+              <i class="ri-price-tag-3-line"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:8px">Best Prices</div>
+            <div style="font-size:13px;color:var(--text-muted)">Compare brand new and refurbished options to find the best deal.</div>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid #8b5cf6">
+          <div class="card-body" style="text-align:center;padding:28px 20px">
+            <div style="width:54px;height:54px;background:rgba(139,92,246,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px;color:#8b5cf6">
+              <i class="ri-customer-service-2-line"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:8px">24/7 Support</div>
+            <div style="font-size:13px;color:var(--text-muted)">Our team is always ready to help you with any issue or question.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAYMENT BANNER -->
+  <section class="section" style="padding:40px 0">
+    <div class="container">
+      <div style="background:linear-gradient(135deg,#0A0D1A,#0E1A3A);border-radius:20px;padding:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+        <div>
+          <h3 style="color:#fff;font-size:24px;margin-bottom:8px">Easy M-Pesa & Airtel Money Payments</h3>
+          <p style="color:rgba(255,255,255,0.6);font-size:14px;max-width:480px">No complex setups. Simply send money to our Till/Phone number and place your order. Fast confirmation within minutes.</p>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 20px;text-align:center">
+            <div style="font-size:22px;margin-bottom:4px">💚</div>
+            <div style="color:#fff;font-weight:700;font-size:13px">M-Pesa</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:11px">Send Money</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 20px;text-align:center">
+            <div style="font-size:22px;margin-bottom:4px">🔴</div>
+            <div style="color:#fff;font-weight:700;font-size:13px">Airtel Money</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:11px">Send Money</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--surface);border-top:1px solid var(--border);padding:40px 0 24px">
+    <div class="container">
+      <div class="grid-4" style="margin-bottom:32px">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue);margin-bottom:10px">
+            <i class="ri-shopping-bag-3-fill"></i> Masket
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Kenya's favourite online marketplace for brand new and refurbished products.</p>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:12px">Categories</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="/category.html?cat=shoes" style="font-size:13px;color:var(--text-muted)"><i class="ri-footprint-line"></i> Shoes</a>
+            <a href="/category.html?cat=jewelry" style="font-size:13px;color:var(--text-muted)"><i class="ri-gem-line"></i> Jewelry</a>
+            <a href="/category.html?cat=clothes" style="font-size:13px;color:var(--text-muted)"><i class="ri-shirt-line"></i> Clothes</a>
+            <a href="/category.html?cat=electronics" style="font-size:13px;color:var(--text-muted)"><i class="ri-computer-line"></i> Electronics</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:12px">Account</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="/profile.html" style="font-size:13px;color:var(--text-muted)"><i class="ri-user-line"></i> My Profile</a>
+            <a href="/cart.html" style="font-size:13px;color:var(--text-muted)"><i class="ri-shopping-cart-2-line"></i> Cart</a>
+            <a href="/login.html" style="font-size:13px;color:var(--text-muted)"><i class="ri-login-box-line"></i> Login</a>
+            <a href="/signup.html" style="font-size:13px;color:var(--text-muted)"><i class="ri-user-add-line"></i> Sign Up</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:12px">Support</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="/contact.html" style="font-size:13px;color:var(--text-muted)"><i class="ri-mail-line"></i> Contact Us</a>
+            <div style="font-size:13px;color:var(--text-muted)"><i class="ri-time-line"></i> Mon–Sat, 8am–8pm</div>
+            <div style="font-size:13px;color:var(--text-muted)"><i class="ri-phone-line"></i> +254 700 000 000</div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div style="font-size:13px;color:var(--text-muted)">© 2025 Masket. All rights reserved.</div>
+        <div style="font-size:12px;color:var(--text-muted)">Made with <span style="color:#ef4444">❤</span> in Kenya</div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/index.html" class="bnav-item active"><i class="ri-home-4-fill"></i> Home</a>
+    <button class="bnav-item category-dropdown" onclick="document.getElementById('cat-mob-menu').classList.toggle('open')">
+      <i class="ri-apps-2-line"></i> Categories
+    </button>
+    <a href="/cart.html" class="bnav-item bnav-cart">
+      <i class="ri-shopping-cart-2-line"></i>
+      <span class="bnav-cart-count" style="display:none">0</span>
+      Cart
+    </a>
+    <a href="/profile.html" class="bnav-item"><i class="ri-user-3-line"></i> Account</a>
+  </div>
+</nav>
+
+<!-- Mobile category menu -->
+<div id="cat-mob-menu" style="display:none;position:fixed;bottom:60px;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:999;padding:8px">
+  <a href="/category.html?cat=shoes" class="cat-menu-item"><i class="ri-footprint-line"></i> Shoes</a>
+  <a href="/category.html?cat=jewelry" class="cat-menu-item"><i class="ri-gem-line"></i> Jewelry</a>
+  <a href="/category.html?cat=clothes" class="cat-menu-item"><i class="ri-shirt-line"></i> Clothes</a>
+  <a href="/category.html?cat=electronics" class="cat-menu-item"><i class="ri-computer-line"></i> Electronics</a>
+</div>
+
+<script>
+  // Mobile category menu toggle
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('cat-mob-menu');
+    if (menu && !menu.contains(e.target) && !e.target.closest('.category-dropdown')) {
+      menu.style.display = 'none';
+    }
+  });
+  document.getElementById('cat-mob-menu') && Object.defineProperty(document.getElementById('cat-mob-menu'), 'open', {
+    set(v) { this.style.display = v ? 'block' : 'none'; }
+  });
+</script>
+
+<script src="/js/api.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

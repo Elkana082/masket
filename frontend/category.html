@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category — Masket</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/index.html" class="navbar-logo"><i class="ri-shopping-bag-3-fill"></i> Mas<span>ket</span></a>
+    <div class="category-dropdown">
+      <button style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-size:14px;font-weight:500">
+        <i class="ri-apps-2-line"></i> Categories <i class="ri-arrow-down-s-line"></i>
+      </button>
+      <div class="category-dropdown-menu">
+        <a href="/category.html?cat=shoes" class="cat-menu-item"><i class="ri-footprint-line"></i> Shoes</a>
+        <a href="/category.html?cat=jewelry" class="cat-menu-item"><i class="ri-gem-line"></i> Jewelry</a>
+        <a href="/category.html?cat=clothes" class="cat-menu-item"><i class="ri-shirt-line"></i> Clothes</a>
+        <a href="/category.html?cat=electronics" class="cat-menu-item"><i class="ri-computer-line"></i> Electronics</a>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/index.html"><i class="ri-home-4-line"></i> Home</a></li>
+      <li><a href="/contact.html"><i class="ri-customer-service-2-line"></i> Contact</a></li>
+      <li>
+        <a href="/cart.html" class="nav-cart-badge">
+          <i class="ri-shopping-cart-2-line"></i> Cart
+          <span class="nav-cart-count" style="display:none">0</span>
+        </a>
+      </li>
+      <li><a href="/profile.html"><i class="ri-user-3-line"></i> My Account</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="dark-toggle"><i class="ri-moon-line"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <!-- PAGE HEADER -->
+  <div style="background:var(--surface);border-bottom:1px solid var(--border)">
+    <div class="container" style="padding-top:32px;padding-bottom:24px">
+      <div class="breadcrumb" style="margin-bottom:10px">
+        <a href="/index.html"><i class="ri-home-4-line"></i> Home</a>
+        <i class="ri-arrow-right-s-line"></i>
+        <span id="cat-breadcrumb">Category</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+        <div>
+          <h1 id="cat-title" style="font-size:32px">Loading...</h1>
+          <p id="products-count" style="font-size:14px;color:var(--text-muted);margin-top:4px">0 products</p>
+        </div>
+        <!-- Condition Tabs -->
+        <div class="condition-tabs">
+          <button class="cond-tab active" data-cond="brand_new">
+            <i class="ri-star-line"></i> Brand New
+          </button>
+          <button class="cond-tab" data-cond="refurbished">
+            <i class="ri-recycle-line"></i> Refurbished
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Loading -->
+      <div id="products-loading" class="loading-overlay" style="display:none">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Products Grid (2 columns) -->
+      <div id="products-grid" class="grid-2" style="grid-template-columns:repeat(2,1fr)">
+        <!-- JS populated -->
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/index.html" class="bnav-item"><i class="ri-home-4-line"></i> Home</a>
+    <a href="/contact.html" class="bnav-item"><i class="ri-customer-service-2-line"></i> Contact</a>
+    <a href="/cart.html" class="bnav-item bnav-cart">
+      <i class="ri-shopping-cart-2-line"></i>
+      <span class="bnav-cart-count" style="display:none">0</span>
+      Cart
+    </a>
+    <a href="/profile.html" class="bnav-item"><i class="ri-user-3-line"></i> Account</a>
+  </div>
+</nav>
+
+<script src="/js/api.js"></script>
+<script src="/js/category.js"></script>
+</body>
+</html>

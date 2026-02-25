@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Masket</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/index.html" class="navbar-logo"><i class="ri-shopping-bag-3-fill"></i> Mas<span>ket</span> <span style="font-size:11px;padding:3px 8px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-left:4px">ADMIN</span></a>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <a href="/profile.html" class="btn btn-ghost btn-sm"><i class="ri-arrow-left-line"></i> My Profile</a>
+      <button class="dark-toggle"><i class="ri-moon-line"></i></button>
+      <button id="logout-btn" class="btn btn-ghost btn-sm" style="color:#ef4444"><i class="ri-logout-box-line"></i> Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);margin-bottom:8px">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px">⚙️ Control Center</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Masket Administration</div>
+      </div>
+
+      <div class="admin-nav-section">Overview</div>
+      <button class="admin-nav-item active" data-section="dashboard" onclick="switchSection('dashboard')">
+        <i class="ri-dashboard-3-line"></i> Dashboard
+      </button>
+
+      <div class="admin-nav-section">Catalogue</div>
+      <button class="admin-nav-item" data-section="products" onclick="switchSection('products')">
+        <i class="ri-shopping-bag-3-line"></i> Products
+      </button>
+
+      <div class="admin-nav-section">Business</div>
+      <button class="admin-nav-item" data-section="orders" onclick="switchSection('orders')">
+        <i class="ri-file-list-3-line"></i> Orders
+      </button>
+      <button class="admin-nav-item" data-section="users" onclick="switchSection('users')">
+        <i class="ri-team-line"></i> Users
+      </button>
+      <button class="admin-nav-item" data-section="contacts" onclick="switchSection('contacts')">
+        <i class="ri-message-3-line"></i> Messages
+      </button>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <section id="section-dashboard" class="admin-section active">
+        <div style="margin-bottom:28px">
+          <h2 style="font-size:26px">Dashboard</h2>
+          <p style="color:var(--text-muted);font-size:14px;margin-top:4px">Welcome back, Admin! Here's what's happening.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="ri-shopping-bag-3-line"></i></div>
+            <div>
+              <div class="stat-num" id="stat-products">—</div>
+              <div class="stat-label">Total Products</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="ri-file-list-3-line"></i></div>
+            <div>
+              <div class="stat-num" id="stat-orders">—</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="ri-team-line"></i></div>
+            <div>
+              <div class="stat-num" id="stat-users">—</div>
+              <div class="stat-label">Registered Users</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="ri-time-line"></i></div>
+            <div>
+              <div class="stat-num" id="stat-pending">—</div>
+              <div class="stat-label">Pending Orders</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <h3 style="font-size:18px;margin-bottom:16px">Quick Actions</h3>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="switchSection('products');setTimeout(()=>openAddProduct(),100)">
+            <i class="ri-add-circle-line"></i> Add New Product
+          </button>
+          <button class="btn btn-ghost" onclick="switchSection('orders')">
+            <i class="ri-file-list-3-line"></i> View Orders
+          </button>
+          <button class="btn btn-ghost" onclick="switchSection('contacts')">
+            <i class="ri-message-3-line"></i> Check Messages
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== PRODUCTS ===== -->
+      <section id="section-products" class="admin-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+          <div>
+            <h2 style="font-size:24px">Products</h2>
+            <p style="color:var(--text-muted);font-size:14px;margin-top:2px">Manage your product catalogue</p>
+          </div>
+          <button class="btn btn-primary" onclick="openAddProduct()">
+            <i class="ri-add-circle-line"></i> Add Product
+          </button>
+        </div>
+
+        <div class="card admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Condition</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:32px"><div class="spinner" style="margin:0 auto"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== ORDERS ===== -->
+      <section id="section-orders" class="admin-section">
+        <div style="margin-bottom:24px">
+          <h2 style="font-size:24px">Orders</h2>
+          <p style="color:var(--text-muted);font-size:14px;margin-top:2px">Manage and update order statuses</p>
+        </div>
+
+        <div class="card admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Update Status</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:32px"><div class="spinner" style="margin:0 auto"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== USERS ===== -->
+      <section id="section-users" class="admin-section">
+        <div style="margin-bottom:24px">
+          <h2 style="font-size:24px">Users</h2>
+          <p style="color:var(--text-muted);font-size:14px;margin-top:2px">Registered customer accounts</p>
+        </div>
+
+        <div class="card admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="5" style="text-align:center;padding:32px"><div class="spinner" style="margin:0 auto"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== CONTACTS ===== -->
+      <section id="section-contacts" class="admin-section">
+        <div style="margin-bottom:24px">
+          <h2 style="font-size:24px">Customer Messages</h2>
+          <p style="color:var(--text-muted);font-size:14px;margin-top:2px">Contact form submissions</p>
+        </div>
+        <div id="contacts-container">
+          <div class="loading-overlay"><div class="spinner"></div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ADD / EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <h3 id="product-modal-title"><i class="ri-add-circle-line" style="color:var(--blue)"></i> Add New Product</h3>
+      <button class="modal-close" onclick="closeModal('product-modal')"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="product-form" enctype="multipart/form-data">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Product Name *</label>
+            <input id="prod-name" type="text" class="form-control" required placeholder="e.g. Nike Air Max 90">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select id="prod-category" class="form-control" required>
+              <option value="">Select category</option>
+              <option value="shoes">Shoes</option>
+              <option value="jewelry">Jewelry</option>
+              <option value="clothes">Clothes</option>
+              <option value="electronics">Electronics</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Price (KSh) *</label>
+            <input id="prod-price" type="number" class="form-control" required placeholder="e.g. 4500" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Stock Quantity</label>
+            <input id="prod-stock" type="number" class="form-control" placeholder="e.g. 10" min="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Condition *</label>
+          <select id="prod-condition" class="form-control" required>
+            <option value="brand_new">Brand New</option>
+            <option value="refurbished">Refurbished</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Short Description</label>
+          <input id="prod-shortDescription" type="text" class="form-control" placeholder="One-line product teaser...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Full Description *</label>
+          <textarea id="prod-description" class="form-control" rows="3" required placeholder="Detailed product description..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display:flex;align-items:center;gap:8px">
+            <input id="prod-featured" type="checkbox" style="width:16px;height:16px"> Mark as Featured
+          </label>
+          <input id="prod-featuredCaption" type="text" class="form-control" style="margin-top:8px" placeholder="Hero caption (shown when featured)">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Product Image</label>
+          <div class="img-upload-area">
+            <input type="file" id="prod-image" accept="image/*">
+            <i class="ri-image-add-line"></i>
+            <p>Click to upload or drag & drop<br><span style="font-size:11px;color:var(--gray-300)">JPG, PNG, WEBP up to 5MB</span></p>
+            <img id="img-preview" class="img-preview" src="" alt="">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('product-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
