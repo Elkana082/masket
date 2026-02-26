@@ -5,14 +5,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadFeaturedProducts();
   setupHeroAnimations();
-
-  // Dark mode toggle
-  document.querySelectorAll('.dark-toggle').forEach(btn => {
-    btn.addEventListener('click', toggleDarkMode);
-  });
-
-  // Auth state update nav
   updateNavAuthState();
+  document.querySelectorAll('.dark-toggle').forEach(btn => btn.addEventListener('click', toggleDarkMode));
 });
 
 function updateNavAuthState() {
@@ -22,23 +16,17 @@ function updateNavAuthState() {
   const authLink = document.getElementById('nav-auth-link');
   const authText = document.getElementById('nav-auth-text');
   const authIcon = document.getElementById('nav-auth-icon');
-
   if (authLink && loggedIn && user) {
-    authText.textContent = user.name.split(' ')[0];
-    authIcon.className = 'ri-user-3-fill';
+    if (authText) authText.textContent = user.name.split(' ')[0];
+    if (authIcon) authIcon.className = 'ri-user-3-fill';
     authLink.href = '/profile.html';
   }
 
-  // Logout button
   const logoutBtn = document.getElementById('nav-logout-btn');
   if (logoutBtn) {
     if (loggedIn) {
       logoutBtn.style.display = 'flex';
-      logoutBtn.addEventListener('click', () => {
-        Auth.clearSession();
-        CartStore.clear();
-        window.location.href = '/index.html';
-      });
+      logoutBtn.onclick = () => { Auth.clearSession(); CartStore.clear(); window.location.href = '/index.html'; };
     } else {
       logoutBtn.style.display = 'none';
     }
@@ -48,7 +36,6 @@ function updateNavAuthState() {
 async function loadFeaturedProducts() {
   const container = document.getElementById('featured-products');
   const loadingEl = document.getElementById('featured-loading');
-
   if (!container) return;
 
   try {
@@ -60,16 +47,20 @@ async function loadFeaturedProducts() {
         <div class="empty-state" style="grid-column:1/-1">
           <div class="empty-icon"><i class="ri-shopping-bag-line"></i></div>
           <h3>No featured products yet</h3>
-          <p>Check back soon for amazing deals!</p>
+          <p>Add products from the Admin Panel and mark them as featured.</p>
         </div>`;
       return;
     }
 
     container.innerHTML = '';
-    data.products.forEach((p, i) => {
-      const card = createProductCard(p, i);
-      container.appendChild(card);
-    });
+    data.products.forEach((p, i) => container.appendChild(createProductCard(p, i)));
+
+    // Set hero caption from first featured product
+    const featured = data.products.find(p => p.featuredCaption);
+    if (featured) {
+      const heroCaption = document.getElementById('hero-caption');
+      if (heroCaption) heroCaption.textContent = featured.featuredCaption;
+    }
 
   } catch (err) {
     if (loadingEl) loadingEl.remove();
@@ -80,11 +71,9 @@ async function loadFeaturedProducts() {
 function createProductCard(product, index = 0) {
   const div = document.createElement('div');
   div.className = `product-card fade-in fade-in-delay-${Math.min(index + 1, 3)}`;
+  div.style.cursor = 'pointer';
 
-  const imgSrc = product.image
-    ? (product.image.startsWith('http') ? product.image : product.image)
-    : 'https://placehold.co/300x300/1755F4/fff?text=No+Image';
-
+  const imgSrc = product.image || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
   const condBadge = product.condition === 'refurbished'
     ? `<span class="badge badge-orange">Refurbished</span>`
     : `<span class="badge badge-blue">Brand New</span>`;
@@ -94,11 +83,6 @@ function createProductCard(product, index = 0) {
       <img src="${imgSrc}" alt="${product.name}" loading="lazy"
         onerror="this.src='https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image'">
       <div class="product-badge">${condBadge}</div>
-      <div class="product-actions">
-        <button class="btn-icon" title="View Details" onclick="window.location.href='/category.html?cat=${product.category}'">
-          <i class="ri-eye-line"></i>
-        </button>
-      </div>
     </div>
     <div class="product-info">
       <div class="product-category">${capitalize(product.category)}</div>
@@ -106,42 +90,53 @@ function createProductCard(product, index = 0) {
       <div class="product-short-desc">${product.shortDescription || product.description.substring(0, 80)}...</div>
       <div class="product-footer">
         <div class="product-price">KSh ${Number(product.price).toLocaleString()}</div>
-        <button class="add-to-cart-btn" title="Add to Cart" onclick="addToCart('${product._id}', '${product.name}', ${product.price}, '${imgSrc}', '${product.condition}')">
+        <button class="add-to-cart-btn" title="Add to Cart" id="atc-home-${product._id}">
           <i class="ri-shopping-cart-2-line"></i>
         </button>
       </div>
     </div>`;
 
-  // Hero caption
-  if (product.featured && product.featuredCaption) {
-    const heroCaption = document.getElementById('hero-caption');
-    if (heroCaption) heroCaption.textContent = product.featuredCaption;
+  // Navigate to product detail on card click
+  div.addEventListener('click', (e) => {
+    if (!e.target.closest('.add-to-cart-btn')) {
+      window.location.href = `/product.html?id=${product._id}`;
+    }
+  });
+
+  // Add to cart — stop propagation
+  const atcBtn = div.querySelector(`#atc-home-${product._id}`);
+  if (atcBtn) {
+    atcBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      addToCart(product._id, product.name, product.price, imgSrc, product.condition, atcBtn);
+    });
   }
 
   return div;
 }
 
-function addToCart(productId, name, price, image, condition) {
+function addToCart(productId, name, price, image, condition, btn) {
   const cart = CartStore.get();
   const existing = cart.find(i => i.productId === productId && i.condition === condition);
-  if (existing) {
-    existing.quantity = (existing.quantity || 1) + 1;
-  } else {
-    cart.push({ productId, name, price, image, condition, quantity: 1 });
-  }
+  if (existing) existing.quantity = (existing.quantity || 1) + 1;
+  else cart.push({ productId, name, price, image, condition, quantity: 1 });
   CartStore.set(cart);
   updateCartBadge();
   showToast(`"${name}" added to cart!`, 'success');
 
-  // Sync with server if logged in
+  if (btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="ri-check-line"></i>';
+    btn.style.background = '#22c55e';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1500);
+  }
+
   if (Auth.isLoggedIn()) {
     API.post('/auth/cart', { productId, quantity: 1, condition }).catch(() => {});
   }
 }
 
-function capitalize(s) {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
-}
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
 function setupHeroAnimations() {
   const heroEls = document.querySelectorAll('.hero-content > *');
@@ -149,13 +144,9 @@ function setupHeroAnimations() {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
     el.style.transition = `opacity 0.6s ease ${i * 0.12}s, transform 0.6s ease ${i * 0.12}s`;
-    setTimeout(() => {
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    }, 100);
+    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 100);
   });
 }
 
-// Expose for use from HTML onclick
 window.addToCart = addToCart;
 window.createProductCard = createProductCard;

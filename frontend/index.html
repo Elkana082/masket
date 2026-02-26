@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Masket — Shop Smart, Live Better</title>
+  <title>Masket — Shop Smart, Live Better | Kenya Online Marketplace</title>
+  <meta name="description" content="Masket is Kenya favourite online marketplace for brand new and refurbished shoes, electronics, clothes and jewelry. Fast delivery. Pay with M-Pesa or Airtel Money.">
+  <meta name="keywords" content="masket, online shopping kenya, buy phones kenya, shoes kenya, electronics kenya, clothes kenya, jewelry kenya, mpesa shopping, nairobi online store">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://masket-3.onrender.com/">
+  <meta property="og:title" content="Masket — Shop Smart, Live Better">
+  <meta property="og:description" content="Kenya favourite marketplace for brand new and refurbished products. Pay via M-Pesa or Airtel Money.">
+  <meta property="og:url" content="https://masket-3.onrender.com/">
+  <meta property="og:type" content="website">
   <link rel="stylesheet" href="/css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
 </head>
@@ -18,11 +26,11 @@
     </a>
 
     <!-- Category Dropdown -->
-    <div class="category-dropdown">
-      <button class="nav-links" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-size:14px;font-weight:500;transition:var(--transition)">
+    <div class="category-dropdown" id="cat-desktop-dropdown">
+      <button onclick="toggleCatDropdown()" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-size:14px;font-weight:500;transition:all 0.25s">
         <i class="ri-apps-2-line"></i> Categories <i class="ri-arrow-down-s-line"></i>
       </button>
-      <div class="category-dropdown-menu">
+      <div class="category-dropdown-menu" id="cat-desktop-menu">
         <a href="/category.html?cat=shoes" class="cat-menu-item"><i class="ri-footprint-line"></i> Shoes</a>
         <a href="/category.html?cat=jewelry" class="cat-menu-item"><i class="ri-gem-line"></i> Jewelry</a>
         <a href="/category.html?cat=clothes" class="cat-menu-item"><i class="ri-shirt-line"></i> Clothes</a>
@@ -273,7 +281,7 @@
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <a href="/index.html" class="bnav-item active"><i class="ri-home-4-fill"></i> Home</a>
-    <button class="bnav-item category-dropdown" onclick="document.getElementById('cat-mob-menu').classList.toggle('open')">
+    <button class="bnav-item" onclick="toggleMobCatMenu()">
       <i class="ri-apps-2-line"></i> Categories
     </button>
     <a href="/cart.html" class="bnav-item bnav-cart">
@@ -294,15 +302,28 @@
 </div>
 
 <script>
-  // Mobile category menu toggle
-  document.addEventListener('click', function(e) {
+  // ---- Desktop category dropdown ----
+  function toggleCatDropdown() {
+    const dd = document.getElementById('cat-desktop-dropdown');
+    dd.classList.toggle('open');
+  }
+
+  // ---- Mobile category menu ----
+  function toggleMobCatMenu() {
     const menu = document.getElementById('cat-mob-menu');
-    if (menu && !menu.contains(e.target) && !e.target.closest('.category-dropdown')) {
-      menu.style.display = 'none';
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  }
+
+  // Close both menus when clicking outside
+  document.addEventListener('click', function(e) {
+    // Desktop
+    const dd = document.getElementById('cat-desktop-dropdown');
+    if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+    // Mobile
+    const mob = document.getElementById('cat-mob-menu');
+    if (mob && !mob.contains(e.target) && !e.target.closest('.bnav-item')) {
+      mob.style.display = 'none';
     }
-  });
-  document.getElementById('cat-mob-menu') && Object.defineProperty(document.getElementById('cat-mob-menu'), 'open', {
-    set(v) { this.style.display = v ? 'block' : 'none'; }
   });
 </script>
 

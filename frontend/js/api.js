@@ -2,14 +2,16 @@
 //  MASKET — API Utility Layer
 // =============================
 
-const API_BASE = '/api';
+// ---- Switch between local dev and production ----
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = IS_LOCAL
+  ? 'http://localhost:5000/api'
+  : 'https://masket-2.onrender.com/api';
 
 // ---- Auth token helpers ----
 const Auth = {
   getToken: () => localStorage.getItem('masket_token'),
-  getUser: () => {
-    try { return JSON.parse(localStorage.getItem('masket_user')); } catch { return null; }
-  },
+  getUser: () => { try { return JSON.parse(localStorage.getItem('masket_user')); } catch { return null; } },
   setSession: (token, user) => {
     localStorage.setItem('masket_token', token);
     localStorage.setItem('masket_user', JSON.stringify(user));
@@ -19,10 +21,7 @@ const Auth = {
     localStorage.removeItem('masket_user');
   },
   isLoggedIn: () => !!localStorage.getItem('masket_token'),
-  isAdmin: () => {
-    const u = Auth.getUser();
-    return u && u.isAdmin;
-  }
+  isAdmin: () => { const u = Auth.getUser(); return u && u.isAdmin; }
 };
 
 // ---- Base fetch wrapper ----
@@ -37,26 +36,23 @@ async function apiRequest(method, endpoint, body = null, isFormData = false) {
 
   const res = await fetch(`${API_BASE}${endpoint}`, options);
   const data = await res.json();
-
   if (!res.ok) throw new Error(data.message || 'Something went wrong');
   return data;
 }
 
 const API = {
-  get: (endpoint) => apiRequest('GET', endpoint),
-  post: (endpoint, body) => apiRequest('POST', endpoint, body),
-  put: (endpoint, body) => apiRequest('PUT', endpoint, body),
-  delete: (endpoint) => apiRequest('DELETE', endpoint),
-  postForm: (endpoint, formData) => apiRequest('POST', endpoint, formData, true),
-  putForm: (endpoint, formData) => apiRequest('PUT', endpoint, formData, true),
+  get:      (endpoint)       => apiRequest('GET',    endpoint),
+  post:     (endpoint, body) => apiRequest('POST',   endpoint, body),
+  put:      (endpoint, body) => apiRequest('PUT',    endpoint, body),
+  delete:   (endpoint)       => apiRequest('DELETE', endpoint),
+  postForm: (endpoint, fd)   => apiRequest('POST',   endpoint, fd, true),
+  putForm:  (endpoint, fd)   => apiRequest('PUT',    endpoint, fd, true),
 };
 
-// ---- Cart local helpers (for guests or quick access) ----
+// ---- Cart (localStorage) ----
 const CartStore = {
-  get: () => {
-    try { return JSON.parse(localStorage.getItem('masket_cart') || '[]'); } catch { return []; }
-  },
-  set: (cart) => localStorage.setItem('masket_cart', JSON.stringify(cart)),
+  get:   () => { try { return JSON.parse(localStorage.getItem('masket_cart') || '[]'); } catch { return []; } },
+  set:   (cart) => localStorage.setItem('masket_cart', JSON.stringify(cart)),
   count: () => CartStore.get().reduce((s, i) => s + (i.quantity || 1), 0),
   clear: () => localStorage.removeItem('masket_cart')
 };
@@ -75,10 +71,13 @@ function showToast(message, type = 'info') {
   toast.className = `toast ${type}`;
   toast.innerHTML = `<i class="${icons[type] || icons.info}"></i><span>${message}</span>`;
   container.appendChild(toast);
-  setTimeout(() => { toast.style.animation = 'toastIn 0.3s ease reverse'; setTimeout(() => toast.remove(), 300); }, 3500);
+  setTimeout(() => {
+    toast.style.animation = 'toastIn 0.3s ease reverse';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
 }
 
-// ---- Update nav cart badge ----
+// ---- Cart badge ----
 function updateCartBadge() {
   const count = CartStore.count();
   document.querySelectorAll('.nav-cart-count, .bnav-cart-count').forEach(el => {
@@ -93,7 +92,6 @@ function initDarkMode() {
   document.documentElement.setAttribute('data-theme', saved);
   updateThemeIcon(saved);
 }
-
 function toggleDarkMode() {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
@@ -101,14 +99,13 @@ function toggleDarkMode() {
   localStorage.setItem('masket_theme', next);
   updateThemeIcon(next);
 }
-
 function updateThemeIcon(theme) {
   document.querySelectorAll('.dark-toggle i').forEach(i => {
     i.className = theme === 'dark' ? 'ri-sun-line' : 'ri-moon-line';
   });
 }
 
-// ---- Highlight active nav link ----
+// ---- Active nav link ----
 function setActiveNav() {
   const path = window.location.pathname;
   document.querySelectorAll('[data-nav-link]').forEach(el => {
@@ -116,7 +113,7 @@ function setActiveNav() {
   });
 }
 
-// ---- Guard: redirect to login if not authenticated ----
+// ---- Auth guards ----
 function requireAuth(redirectBack = true) {
   if (!Auth.isLoggedIn()) {
     const back = redirectBack ? `?next=${encodeURIComponent(window.location.pathname)}` : '';
@@ -125,15 +122,13 @@ function requireAuth(redirectBack = true) {
   }
   return true;
 }
-
-// ---- Guard: redirect to home if not admin ----
 function requireAdmin() {
   if (!requireAuth()) return false;
   if (!Auth.isAdmin()) { window.location.href = '/index.html'; return false; }
   return true;
 }
 
-// Run on every page
+// ---- Run on every page ----
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   updateCartBadge();

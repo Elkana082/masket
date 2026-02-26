@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — Masket</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    /* ===== PRODUCT DETAIL PAGE ===== */
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ---- Image Side ---- */
+    .product-image-section { position: sticky; top: calc(var(--nav-h) + 24px); }
+
+    .main-img-wrap {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--gray-100);
+      aspect-ratio: 1;
+      cursor: zoom-in;
+      border: 1px solid var(--border);
+    }
+    .main-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      display: block;
+    }
+    .main-img-wrap:hover img { transform: scale(1.04); }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .main-img-wrap:hover .zoom-hint { opacity: 0; }
+
+    .img-condition-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+    }
+
+    /* ---- Full Screen Zoom Modal ---- */
+    .zoom-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      cursor: zoom-out;
+    }
+    .zoom-modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .zoom-modal-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .zoom-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      transition: transform 0.1s ease;
+      transform-origin: center center;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .zoom-img.grabbing { cursor: grabbing; }
+
+    .zoom-controls {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 40px;
+      padding: 8px 16px;
+    }
+    .zoom-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .zoom-btn:hover { background: var(--blue); }
+    .zoom-level {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      min-width: 46px;
+      text-align: center;
+      font-family: 'Syne', sans-serif;
+    }
+    .zoom-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+      backdrop-filter: blur(8px);
+    }
+    .zoom-close:hover { background: rgba(239,68,68,0.5); }
+
+    .zoom-tip {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ---- Info Side ---- */
+    .product-info-section { padding-top: 8px; }
+
+    .product-detail-category {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--blue);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .product-detail-name {
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .product-detail-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--blue);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .product-detail-price span {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .product-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    .product-detail-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .product-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .product-meta-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+    .product-meta-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .product-meta-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .qty-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .qty-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .qty-ctrl-lg {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .qty-ctrl-lg button {
+      width: 40px; height: 40px;
+      border: none;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 18px;
+      transition: var(--transition);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qty-ctrl-lg button:hover { background: var(--blue); color: #fff; }
+    .qty-ctrl-lg span {
+      min-width: 48px;
+      text-align: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      border-left: 2px solid var(--border);
+      border-right: 2px solid var(--border);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-cta {
+      display: flex;
+      gap: 12px;
+    }
+    .product-cta .btn-primary { flex: 1; font-size: 16px; padding: 14px; }
+    .product-cta .btn-ghost { padding: 14px 18px; }
+
+    .stock-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 14px;
+    }
+    .stock-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .in-stock .stock-dot { background: #22c55e; }
+    .out-stock .stock-dot { background: #ef4444; }
+    .in-stock { color: #16a34a; }
+    .out-stock { color: #dc2626; }
+
+    /* ---- Loading skeleton ---- */
+    .skeleton {
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: var(--radius-sm);
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* ---- Related products ---- */
+    .related-section { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .product-detail-grid { grid-template-columns: 1fr; gap: 28px; }
+      .product-image-section { position: static; }
+      .product-detail-name { font-size: 24px; }
+      .product-detail-price { font-size: 28px; }
+      .product-meta-grid { grid-template-columns: 1fr 1fr; }
+      .zoom-controls { bottom: 80px; }
+    }
+    @media (max-width: 480px) {
+      .product-cta { flex-direction: column; }
+      .product-meta-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/index.html" class="navbar-logo"><i class="ri-shopping-bag-3-fill"></i> Mas<span>ket</span></a>
+    <div class="category-dropdown">
+      <button style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-size:14px;font-weight:500">
+        <i class="ri-apps-2-line"></i> Categories <i class="ri-arrow-down-s-line"></i>
+      </button>
+      <div class="category-dropdown-menu">
+        <a href="/category.html?cat=shoes" class="cat-menu-item"><i class="ri-footprint-line"></i> Shoes</a>
+        <a href="/category.html?cat=jewelry" class="cat-menu-item"><i class="ri-gem-line"></i> Jewelry</a>
+        <a href="/category.html?cat=clothes" class="cat-menu-item"><i class="ri-shirt-line"></i> Clothes</a>
+        <a href="/category.html?cat=electronics" class="cat-menu-item"><i class="ri-computer-line"></i> Electronics</a>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/index.html"><i class="ri-home-4-line"></i> Home</a></li>
+      <li><a href="/contact.html"><i class="ri-customer-service-2-line"></i> Contact</a></li>
+      <li>
+        <a href="/cart.html" class="nav-cart-badge">
+          <i class="ri-shopping-cart-2-line"></i> Cart
+          <span class="nav-cart-count" style="display:none">0</span>
+        </a>
+      </li>
+      <li><a href="/profile.html"><i class="ri-user-3-line"></i> My Account</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="dark-toggle"><i class="ri-moon-line"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container" style="padding-top:28px;padding-bottom:60px">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb" id="breadcrumb" style="margin-bottom:28px">
+      <a href="/index.html"><i class="ri-home-4-line"></i> Home</a>
+      <i class="ri-arrow-right-s-line"></i>
+      <a href="#" id="breadcrumb-cat">Category</a>
+      <i class="ri-arrow-right-s-line"></i>
+      <span id="breadcrumb-name">Product</span>
+    </div>
+
+    <!-- LOADING SKELETON -->
+    <div id="product-loading" class="product-detail-grid">
+      <div>
+        <div class="skeleton" style="width:100%;aspect-ratio:1;border-radius:20px"></div>
+      </div>
+      <div style="padding-top:8px">
+        <div class="skeleton" style="height:14px;width:100px;margin-bottom:16px"></div>
+        <div class="skeleton" style="height:40px;width:80%;margin-bottom:10px"></div>
+        <div class="skeleton" style="height:40px;width:60%;margin-bottom:24px"></div>
+        <div class="skeleton" style="height:44px;width:140px;margin-bottom:24px"></div>
+        <div class="skeleton" style="height:1px;margin-bottom:24px"></div>
+        <div class="skeleton" style="height:14px;margin-bottom:10px"></div>
+        <div class="skeleton" style="height:14px;margin-bottom:10px"></div>
+        <div class="skeleton" style="height:14px;width:70%;margin-bottom:24px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+          <div class="skeleton" style="height:62px;border-radius:8px"></div>
+          <div class="skeleton" style="height:62px;border-radius:8px"></div>
+          <div class="skeleton" style="height:62px;border-radius:8px"></div>
+          <div class="skeleton" style="height:62px;border-radius:8px"></div>
+        </div>
+        <div class="skeleton" style="height:52px;border-radius:8px"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT DETAIL (hidden until loaded) -->
+    <div id="product-detail" class="product-detail-grid" style="display:none">
+
+      <!-- LEFT: IMAGE -->
+      <div class="product-image-section">
+        <div class="main-img-wrap" id="main-img-wrap" onclick="openZoom()">
+          <img id="main-product-img" src="" alt="Product image"
+            onerror="this.src='https://placehold.co/600x600/E2E6F0/8A93A8?text=No+Image'">
+          <div class="img-condition-badge" id="img-condition-badge"></div>
+          <div class="zoom-hint">
+            <i class="ri-zoom-in-line"></i> Click to zoom
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: INFO -->
+      <div class="product-info-section">
+        <div class="product-detail-category" id="product-category-label">
+          <i class="ri-tag-3-line"></i>
+          <span id="product-cat-text">Category</span>
+        </div>
+
+        <h1 class="product-detail-name" id="product-name">Loading...</h1>
+
+        <div class="product-detail-price">
+          KSh <span id="product-price-val">0</span>
+          <span id="product-condition-label"></span>
+        </div>
+
+        <div class="product-divider"></div>
+
+        <p class="product-detail-desc" id="product-description">—</p>
+
+        <div class="product-meta-grid">
+          <div class="product-meta-item">
+            <div class="product-meta-label"><i class="ri-price-tag-3-line"></i> Condition</div>
+            <div class="product-meta-value" id="meta-condition">—</div>
+          </div>
+          <div class="product-meta-item">
+            <div class="product-meta-label"><i class="ri-apps-2-line"></i> Category</div>
+            <div class="product-meta-value" id="meta-category">—</div>
+          </div>
+          <div class="product-meta-item">
+            <div class="product-meta-label"><i class="ri-store-3-line"></i> Stock</div>
+            <div class="product-meta-value" id="meta-stock">—</div>
+          </div>
+          <div class="product-meta-item">
+            <div class="product-meta-label"><i class="ri-truck-line"></i> Delivery</div>
+            <div class="product-meta-value">1–3 Business Days</div>
+          </div>
+        </div>
+
+        <!-- Stock indicator -->
+        <div class="stock-indicator" id="stock-indicator">
+          <div class="stock-dot"></div>
+          <span id="stock-text">In Stock</span>
+        </div>
+
+        <div class="product-divider"></div>
+
+        <!-- Quantity -->
+        <div class="qty-section">
+          <span class="qty-label">Qty</span>
+          <div class="qty-ctrl-lg">
+            <button onclick="changeQty(-1)"><i class="ri-subtract-line"></i></button>
+            <span id="qty-display">1</span>
+            <button onclick="changeQty(1)"><i class="ri-add-line"></i></button>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="product-cta">
+          <button class="btn btn-primary" id="add-cart-btn" onclick="addProductToCart()">
+            <i class="ri-shopping-cart-2-line"></i> Add to Cart
+          </button>
+          <a href="/cart.html" class="btn btn-ghost" title="View Cart">
+            <i class="ri-shopping-bag-3-line"></i>
+          </a>
+        </div>
+
+        <!-- Payment note -->
+        <div style="margin-top:20px;padding:14px 16px;background:var(--blue-muted);border:1px solid rgba(23,85,244,0.15);border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:10px">
+          <span style="font-size:20px">💚🔴</span>
+          <span>Pay via <strong style="color:var(--text)">M-Pesa</strong> or <strong style="color:var(--text)">Airtel Money</strong> at checkout</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div id="product-error" class="empty-state" style="display:none">
+      <div class="empty-icon"><i class="ri-error-warning-line"></i></div>
+      <h3>Product Not Found</h3>
+      <p>This product may have been removed or the link is incorrect.</p>
+      <a href="/index.html" class="btn btn-primary"><i class="ri-home-4-line"></i> Go Home</a>
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    <div class="related-section" id="related-section" style="display:none">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">More in <span id="related-cat-name">Category</span></h2>
+          <p class="section-subtitle">You might also like these</p>
+        </div>
+        <a href="#" id="related-view-all" class="btn btn-ghost">View All <i class="ri-arrow-right-line"></i></a>
+      </div>
+      <div id="related-grid" class="grid-2" style="grid-template-columns:repeat(4,1fr);gap:16px"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="/index.html" class="bnav-item"><i class="ri-home-4-line"></i> Home</a>
+    <a href="/contact.html" class="bnav-item"><i class="ri-customer-service-2-line"></i> Contact</a>
+    <a href="/cart.html" class="bnav-item bnav-cart">
+      <i class="ri-shopping-cart-2-line"></i>
+      <span class="bnav-cart-count" style="display:none">0</span>
+      Cart
+    </a>
+    <a href="/profile.html" class="bnav-item"><i class="ri-user-3-line"></i> Account</a>
+  </div>
+</nav>
+
+<!-- ===== ZOOM MODAL ===== -->
+<div class="zoom-modal" id="zoom-modal" onclick="handleZoomBgClick(event)">
+  <div class="zoom-modal-inner">
+    <div class="zoom-tip">
+      <i class="ri-mouse-line"></i> Scroll to zoom · Drag to pan
+    </div>
+    <button class="zoom-close" onclick="closeZoom()"><i class="ri-close-line"></i></button>
+    <img id="zoom-img" class="zoom-img" src="" alt="Product zoom" draggable="false">
+    <div class="zoom-controls" onclick="event.stopPropagation()">
+      <button class="zoom-btn" onclick="adjustZoom(-0.25)" title="Zoom out"><i class="ri-zoom-out-line"></i></button>
+      <span class="zoom-level" id="zoom-level-label">100%</span>
+      <button class="zoom-btn" onclick="adjustZoom(0.25)" title="Zoom in"><i class="ri-zoom-in-line"></i></button>
+      <div style="width:1px;height:24px;background:rgba(255,255,255,0.2);margin:0 4px"></div>
+      <button class="zoom-btn" onclick="resetZoom()" title="Reset"><i class="ri-fullscreen-exit-line"></i></button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/product.js"></script>
+</body>
+</html>
