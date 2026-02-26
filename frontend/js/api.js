@@ -6,7 +6,7 @@
 const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API_BASE = IS_LOCAL
   ? 'http://localhost:5000/api'
-  : 'https://masket-2.onrender.com/api';
+  : 'https://masket.onrender.com/api';
 
 // ---- Auth token helpers ----
 const Auth = {

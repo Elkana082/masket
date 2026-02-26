@@ -11,6 +11,7 @@ const app = express();
 app.use(cors({
   origin: [
     'https://masket-3.onrender.com',
+    'https://masket.onrender.com',
     'http://localhost:5000',
     'http://localhost:3000'
   ],
