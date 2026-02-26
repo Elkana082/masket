@@ -80,7 +80,7 @@ async function loadProducts() {
 
 function buildProductRow(p) {
   const tr = document.createElement('tr');
-  const imgSrc = p.image || 'https://placehold.co/46x46/E2E6F0/8A93A8?text=?';
+  const imgSrc = fixImageUrl(p.image) || 'https://placehold.co/46x46/E2E6F0/8A93A8?text=?';
   tr.innerHTML = `
     <td><img class="table-img" src="${imgSrc}" alt="${p.name}" onerror="this.src='https://placehold.co/46x46/E2E6F0/8A93A8?text=?'"></td>
     <td><div style="font-weight:600;font-size:14px">${p.name}</div><div style="font-size:12px;color:var(--text-muted)">${p.shortDescription?.substring(0,50) || ''}</div></td>
@@ -141,7 +141,7 @@ async function openEditProduct(id) {
     if (featEl) featEl.checked = p.featured;
 
     const preview = document.getElementById('img-preview');
-    if (preview && p.image) { preview.src = p.image; preview.style.display = 'block'; }
+    if (preview && p.image) { preview.src = fixImageUrl(p.image); preview.style.display = 'block'; }
 
     document.getElementById('product-modal-title').textContent = 'Edit Product';
     openModal('product-modal');

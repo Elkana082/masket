@@ -74,7 +74,7 @@ async function loadProducts() {
 }
 
 function buildProductCard(product, index) {
-  const imgSrc = product.image || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
+  const imgSrc = fixImageUrl(product.image) || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
 
   // --- Outer card ---
   const div = document.createElement('div');

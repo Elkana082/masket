@@ -35,7 +35,7 @@ function renderCart() {
     const itemTotal = (item.price || 0) * (item.quantity || 1);
     subtotal += itemTotal;
 
-    const imgSrc = item.image || 'https://placehold.co/80x80/E2E6F0/8A93A8?text=?';
+    const imgSrc = fixImageUrl(item.image) || 'https://placehold.co/80x80/E2E6F0/8A93A8?text=?';
 
     const div = document.createElement('div');
     div.className = 'cart-item';

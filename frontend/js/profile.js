@@ -130,7 +130,7 @@ function buildOrderCard(order) {
       ${order.items.map(item => `
         <div class="order-item-row">
           <img class="order-item-img"
-            src="${item.image || 'https://placehold.co/48x48/E2E6F0/8A93A8?text=?'}"
+            src="${fixImageUrl(item.image) || 'https://placehold.co/48x48/E2E6F0/8A93A8?text=?'}"
             alt="${item.name}"
             onerror="this.src='https://placehold.co/48x48/E2E6F0/8A93A8?text=?'">
           <div style="flex:1">

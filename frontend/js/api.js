@@ -8,6 +8,17 @@ const API_BASE = IS_LOCAL
   ? 'http://localhost:5000/api'
   : 'https://masket.onrender.com/api';
 
+// ---- Fix image URLs to always point to backend ----
+function fixImageUrl(url) {
+  if (!url) return '';
+  // Already a full URL (http/https) — return as-is
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  // Relative path like /uploads/xxx — prepend backend base
+  const backendBase = IS_LOCAL ? 'http://localhost:5000' : 'https://masket.onrender.com';
+  return backendBase + (url.startsWith('/') ? url : '/' + url);
+}
+window.fixImageUrl = fixImageUrl;
+
 // ---- Auth token helpers ----
 const Auth = {
   getToken: () => localStorage.getItem('masket_token'),

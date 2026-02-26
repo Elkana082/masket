@@ -46,7 +46,7 @@ function renderProduct(p) {
   if (loading) loading.style.display = 'none';
   if (detail) detail.style.display = 'grid';
 
-  const imgSrc = p.image || 'https://placehold.co/600x600/E2E6F0/8A93A8?text=No+Image';
+  const imgSrc = fixImageUrl(p.image) || 'https://placehold.co/600x600/E2E6F0/8A93A8?text=No+Image';
 
   // Image
   const mainImg = document.getElementById('main-product-img');
@@ -117,7 +117,7 @@ async function loadRelated(category, excludeId) {
     grid.innerHTML = '';
 
     related.forEach(p => {
-      const imgSrc = p.image || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
+      const imgSrc = fixImageUrl(p.image) || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
       const card = document.createElement('div');
       card.className = 'product-card fade-in';
       card.style.cursor = 'pointer';

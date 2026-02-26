@@ -73,7 +73,7 @@ function createProductCard(product, index = 0) {
   div.className = `product-card fade-in fade-in-delay-${Math.min(index + 1, 3)}`;
   div.style.cursor = 'pointer';
 
-  const imgSrc = product.image || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
+  const imgSrc = fixImageUrl(product.image) || 'https://placehold.co/300x300/E2E6F0/8A93A8?text=No+Image';
   const condBadge = product.condition === 'refurbished'
     ? `<span class="badge badge-orange">Refurbished</span>`
     : `<span class="badge badge-blue">Brand New</span>`;
