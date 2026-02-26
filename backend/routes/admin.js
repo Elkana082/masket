@@ -22,13 +22,27 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = /jpeg|jpg|png|webp/;
     if (allowed.test(file.mimetype)) cb(null, true);
     else cb(new Error('Only image files are allowed'));
   }
 });
+
+// Helper: convert relative image path to full backend URL
+function fullImageUrl(req, imagePath) {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+  const base = process.env.BACKEND_URL || (req.protocol + '://' + req.get('host'));
+  return base + (imagePath.startsWith('/') ? imagePath : '/' + imagePath);
+}
+
+function formatProduct(req, product) {
+  const p = product.toObject ? product.toObject() : { ...product };
+  p.image = fullImageUrl(req, p.image);
+  return p;
+}
 
 // All admin routes require auth + admin
 router.use(protect, adminOnly);
@@ -48,16 +62,14 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-// @route POST /api/admin/products — Create product
+// @route POST /api/admin/products
 router.post('/products', upload.single('image'), async (req, res) => {
   try {
     const { name, description, shortDescription, price, category, condition, stock, featured, featuredCaption } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : '';
 
     const product = await Product.create({
-      name,
-      description,
-      shortDescription,
+      name, description, shortDescription,
       price: parseFloat(price),
       category,
       condition: condition || 'brand_new',
@@ -67,14 +79,13 @@ router.post('/products', upload.single('image'), async (req, res) => {
       featuredCaption: featuredCaption || ''
     });
 
-    res.status(201).json({ success: true, product });
+    res.status(201).json({ success: true, product: formatProduct(req, product) });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// @route PUT /api/admin/products/:id — Update product
+// @route PUT /api/admin/products/:id
 router.put('/products/:id', upload.single('image'), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -88,7 +99,7 @@ router.put('/products/:id', upload.single('image'), async (req, res) => {
     if (req.file) product.image = `/uploads/${req.file.filename}`;
 
     await product.save();
-    res.json({ success: true, product });
+    res.json({ success: true, product: formatProduct(req, product) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -99,8 +110,7 @@ router.delete('/products/:id', async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-    // Remove image file if exists
-    if (product.image) {
+    if (product.image && product.image.startsWith('/uploads/')) {
       const filePath = path.join(__dirname, '..', product.image);
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
@@ -115,9 +125,17 @@ router.get('/orders', async (req, res) => {
   try {
     const orders = await Order.find()
       .populate('user', 'name email phone')
-      .populate('items.product', 'name image')
       .sort({ createdAt: -1 });
-    res.json({ success: true, orders });
+    // Fix image URLs in order items
+    const formatted = orders.map(o => {
+      const obj = o.toObject();
+      obj.items = obj.items.map(item => ({
+        ...item,
+        image: fullImageUrl(req, item.image)
+      }));
+      return obj;
+    });
+    res.json({ success: true, orders: formatted });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
   }

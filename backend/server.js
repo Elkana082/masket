@@ -18,6 +18,9 @@ app.use(cors({
   credentials: true
 }));
 
+// Trust Render's proxy so req.protocol = 'https'
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
