@@ -1,53 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { upload, uploadToCloudinary, deleteFromCloudinary } = require('../middleware/cloudinary');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const { protect, adminOnly } = require('../middleware/auth');
 
-// Multer storage config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads');
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname.replace(/\s/g, '_')}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|webp/;
-    if (allowed.test(file.mimetype)) cb(null, true);
-    else cb(new Error('Only image files are allowed'));
-  }
-});
-
-// Helper: convert relative image path to full backend URL
-function fullImageUrl(req, imagePath) {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
-  const base = process.env.BACKEND_URL || (req.protocol + '://' + req.get('host'));
-  return base + (imagePath.startsWith('/') ? imagePath : '/' + imagePath);
-}
-
-function formatProduct(req, product) {
-  const p = product.toObject ? product.toObject() : { ...product };
-  p.image = fullImageUrl(req, p.image);
-  return p;
-}
-
 // All admin routes require auth + admin
 router.use(protect, adminOnly);
 
-// @route GET /api/admin/stats
+// ---- Stats ----
 router.get('/stats', async (req, res) => {
   try {
     const [totalProducts, totalOrders, totalUsers, pendingOrders] = await Promise.all([
@@ -62,11 +24,16 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-// @route POST /api/admin/products
+// ---- Create product ----
 router.post('/products', upload.single('image'), async (req, res) => {
   try {
     const { name, description, shortDescription, price, category, condition, stock, featured, featuredCaption } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : '';
+
+    // Upload image to Cloudinary if provided
+    let image = '';
+    if (req.file) {
+      image = await uploadToCloudinary(req.file.buffer, req.file.mimetype);
+    }
 
     const product = await Product.create({
       name, description, shortDescription,
@@ -74,89 +41,82 @@ router.post('/products', upload.single('image'), async (req, res) => {
       category,
       condition: condition || 'brand_new',
       stock: parseInt(stock) || 0,
-      image,
+      image, // full Cloudinary https URL
       featured: featured === 'true',
       featuredCaption: featuredCaption || ''
     });
 
-    res.status(201).json({ success: true, product: formatProduct(req, product) });
+    res.status(201).json({ success: true, product });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// @route PUT /api/admin/products/:id
+// ---- Update product ----
 router.put('/products/:id', upload.single('image'), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
     const fields = ['name', 'description', 'shortDescription', 'category', 'condition', 'featuredCaption'];
-    fields.forEach((f) => { if (req.body[f] !== undefined) product[f] = req.body[f]; });
+    fields.forEach(f => { if (req.body[f] !== undefined) product[f] = req.body[f]; });
     if (req.body.price !== undefined) product.price = parseFloat(req.body.price);
     if (req.body.stock !== undefined) product.stock = parseInt(req.body.stock);
     if (req.body.featured !== undefined) product.featured = req.body.featured === 'true';
-    if (req.file) product.image = `/uploads/${req.file.filename}`;
+
+    if (req.file) {
+      // Delete old image from Cloudinary
+      await deleteFromCloudinary(product.image);
+      // Upload new image
+      product.image = await uploadToCloudinary(req.file.buffer, req.file.mimetype);
+    }
 
     await product.save();
-    res.json({ success: true, product: formatProduct(req, product) });
+    res.json({ success: true, product });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// @route DELETE /api/admin/products/:id
+// ---- Delete product ----
 router.delete('/products/:id', async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-    if (product.image && product.image.startsWith('/uploads/')) {
-      const filePath = path.join(__dirname, '..', product.image);
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    }
+    await deleteFromCloudinary(product.image);
     res.json({ success: true, message: 'Product deleted' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// @route GET /api/admin/orders
+// ---- Get all orders ----
 router.get('/orders', async (req, res) => {
   try {
     const orders = await Order.find()
       .populate('user', 'name email phone')
       .sort({ createdAt: -1 });
-    // Fix image URLs in order items
-    const formatted = orders.map(o => {
-      const obj = o.toObject();
-      obj.items = obj.items.map(item => ({
-        ...item,
-        image: fullImageUrl(req, item.image)
-      }));
-      return obj;
-    });
-    res.json({ success: true, orders: formatted });
+    res.json({ success: true, orders });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// @route PUT /api/admin/orders/:id
+// ---- Update order status ----
 router.put('/orders/:id', async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      { new: true }
-    ).populate('user', 'name email');
+      req.params.id, { status: req.body.status }, { new: true }
+    ).populate('user', 'name email phone');
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
     res.json({ success: true, order });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// @route DELETE /api/admin/orders/:id
+// ---- Delete order ----
 router.delete('/orders/:id', async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
@@ -167,22 +127,22 @@ router.delete('/orders/:id', async (req, res) => {
   }
 });
 
-// @route DELETE /api/admin/users/:id
-router.delete('/users/:id', async (req, res) => {
+// ---- Get all users ----
+router.get('/users', async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
-    res.json({ success: true, message: 'User deleted' });
+    const users = await User.find({ isAdmin: false }).select('-password').sort({ createdAt: -1 });
+    res.json({ success: true, users });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// @route GET /api/admin/users
-router.get('/users', async (req, res) => {
+// ---- Delete user ----
+router.delete('/users/:id', async (req, res) => {
   try {
-    const users = await User.find({ isAdmin: false }).select('-password').sort({ createdAt: -1 });
-    res.json({ success: true, users });
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, message: 'User deleted' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
   }

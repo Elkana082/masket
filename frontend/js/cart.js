@@ -63,7 +63,7 @@ function renderCart() {
   });
 
   // Summary
-  const shipping = subtotal > 5000 ? 0 : 250;
+  const shipping = subtotal > 5000 ? 0 : 0;
   const total = subtotal + shipping;
 
   if (cartSummaryEl) {

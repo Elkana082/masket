@@ -127,7 +127,7 @@ input, select, textarea, button { font-family: inherit; }
   line-height: 1;
 }
 .btn-primary {
-  background:orange;
+  background:rgb(231, 192, 19);
   color: #fff;
   box-shadow: var(--shadow-blue);
 }
@@ -135,7 +135,7 @@ input, select, textarea, button { font-family: inherit; }
   background:white;
   transform: translateY(-1px);
   box-shadow: 0 6px 30px black;
-  color:black;
+  color:rgba(56, 13, 13, 0.63);
 }
 .btn-outline {
   background: transparent;
@@ -477,9 +477,9 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   gap: 8px;
   padding: 6px 14px;
   border-radius: 20px;
-  background:white;
+  background:greenyellow;
   border: 2px solid whitesmoke;
-  color:orange;
+  color: black;
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
@@ -864,7 +864,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 
 /* ===== PROFILE ===== */
 .profile-header {
-  background:gray;
+  background:green;
   padding: 40px 0;
   margin-bottom: 32px;
 }

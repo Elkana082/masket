@@ -56,7 +56,7 @@
           <button onclick="openModal('edit-profile-modal')" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3);color:#fff">
             <i class="ri-edit-line"></i> Edit Profile
           </button>
-          <button id="logout-btn" onclick="doLogout()" class="btn btn-ghost" style="background:red;color:white;border:none">
+          <button id="logout-btn" onclick="doLogout()" class="btn btn-ghost" style="background:rgba(239,68,68,0.15);color:#f87171;border:none">
             <i class="ri-logout-box-line"></i> Logout
           </button>
         </div>
@@ -66,7 +66,7 @@
 
   <section class="section" style="padding-top:32px">
     <div class="container">
-      <div style="display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:28px">
 
         <!-- Left: Profile Details Card -->
         <div>
@@ -112,7 +112,7 @@
 
         <!-- Right: Orders -->
         <div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
             <h2 style="font-size:22px">My Orders</h2>
           </div>
           <div id="orders-loading" class="loading-overlay"><div class="spinner"></div></div>
