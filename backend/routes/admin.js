@@ -156,6 +156,28 @@ router.put('/orders/:id', async (req, res) => {
   }
 });
 
+// @route DELETE /api/admin/orders/:id
+router.delete('/orders/:id', async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+    res.json({ success: true, message: 'Order deleted' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route DELETE /api/admin/users/:id
+router.delete('/users/:id', async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, message: 'User deleted' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // @route GET /api/admin/users
 router.get('/users', async (req, res) => {
   try {

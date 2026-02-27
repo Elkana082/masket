@@ -67,6 +67,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   transition: background 0.3s, color 0.3s;
+  
 }
 
 h1, h2, h3, h4, h5 {
@@ -94,7 +95,8 @@ input, select, textarea, button { font-family: inherit; }
 .gap-2 { gap: 16px; }
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.grid-5{ display: grid; grid-template-columns: repeat( 1fr);gap: 10px; }
 .text-center { text-align: center; }
 .text-muted { color: var(--text-muted); }
 .text-blue { color: var(--blue); }
@@ -132,7 +134,7 @@ input, select, textarea, button { font-family: inherit; }
 .btn-primary:hover {
   background:white;
   transform: translateY(-1px);
-  box-shadow: 0 6px 30px white;
+  box-shadow: 0 6px 30px black;
   color:black;
 }
 .btn-outline {
@@ -141,9 +143,9 @@ input, select, textarea, button { font-family: inherit; }
   border: 2px solid white;
 }
 .btn-outline:hover {
-  background:white;
+  background:orange;
   transform: translateY(-1px);
-  box-shadow: 0 6px 30px white;
+  box-shadow: 0 6px 30px black;
   color:black;
 }
 .btn-ghost {
@@ -153,10 +155,10 @@ input, select, textarea, button { font-family: inherit; }
 }
 .btn-ghost:hover { background:orange; color:white; }
 .btn-danger {
-  background: #FF3B3B;
+  background: #c50909;
   color: #fff;
 }
-.btn-danger:hover { background: #cc0000; color: #fff; }
+.btn-danger:hover { background: black; color: #fff; }
 .btn-sm { padding: 7px 14px; font-size: 13px; }
 .btn-lg { padding: 14px 32px; font-size: 16px; }
 .btn-block { width: 100%; justify-content: center; }
@@ -435,7 +437,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 
 /* ===== PAGE WRAPPER ===== */
 .page-wrapper {
-  margin-top: -65px;
+  margin-top: -68px;
   min-height: 100vh;
   padding-top: var(--nav-h);
 }
@@ -447,7 +449,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: linear-gradient(135deg,#eb0ed8,#1b49ca);
+  background:green;
 }
 .hero-bg {
   position: absolute;
@@ -520,12 +522,12 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 .hero-stat-num {
   font-family: 'Syne', sans-serif;
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 600;
   color: #fff;
 }
 .hero-stat-label {
   font-size: 12px;
-  color: rgba(255,255,255,0.5);
+  color:var(--white);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -562,7 +564,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   transition: var(--transition);
   position: relative;
   display: flex;
-  flex-direction:column;
+  flex-direction:row;
 
 }
 .product-card:hover {
@@ -598,7 +600,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   transition: var(--transition);
 }
 .product-card:hover .product-actions { opacity: 1; transform: translateX(0); }
-.product-info { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; }
+.product-info { padding: 14px 16px; flex: 1; display: flex; flex-direction:column; }
 .product-category {
   font-size: 11px;
   font-weight: 600;
@@ -636,8 +638,8 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 }
 .product-price {
   font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text);
 }
 .product-price span { font-size: 13px; font-weight: 500; color: var(--text-muted); }
@@ -862,26 +864,26 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 
 /* ===== PROFILE ===== */
 .profile-header {
-  background: linear-gradient(135deg, #0A0D1A, #0E1A3A);
+  background:gray;
   padding: 40px 0;
   margin-bottom: 32px;
 }
 .profile-avatar {
   width: 80px; height: 80px;
   border-radius: 50%;
-  background: var(--blue);
+  background: whitesmoke;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Syne', sans-serif;
   font-size: 28px;
   font-weight: 800;
-  color: #fff;
+  color:black;
   margin-bottom: 14px;
   border: 3px solid rgba(255,255,255,0.2);
 }
-.profile-name { font-size: 26px; color: #fff; }
-.profile-email { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.profile-name { font-size: 26px; color: #f3ff49; }
+.profile-email { font-size: 14px; color:white; margin-top: 4px; }
 .profile-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 14px; }
-.profile-meta-item { font-size: 13px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 6px; }
+.profile-meta-item { font-size: 13px; color:var(--white); display: flex; align-items: center; gap: 6px; }
 
 /* Order status colors */
 .status-pending { color: #f59e0b; }
@@ -892,10 +894,10 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 .status-cancelled { color: #ef4444; }
 
 .order-card {
-  border: 1px solid var(--border);
+  border: 3px solid var(--border);
   border-radius: var(--radius);
   margin-top:30px;
-  overflow: hidden;
+  overflow-x: hidden;
   max-width: 400px;
   background: var(--surface);
 }
@@ -909,6 +911,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .order-id { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
 .order-items { padding: 16px 18px; }
 .order-item-row { display: flex; gap: 12px; align-items: center; padding: 8px 0; font-size: 14px; }
@@ -1170,7 +1173,7 @@ tr:hover td { background: var(--surface-2); }
 /* ===== CONTACT ===== */
 .contact-grid { display: grid; grid-template-columns: 1fr 400px; gap: 40px; }
 .contact-info-card {
-  background: linear-gradient(135deg, #0A0D1A, #0E1A3A);
+  background:rgb(16, 71, 16);
   border-radius: var(--radius-lg);
   padding: 36px;
   color: #fff;
@@ -1270,6 +1273,7 @@ tr:hover td { background: var(--surface-2); }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-5 { grid-template-columns: repeat(1fr); }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .admin-layout { grid-template-columns: 1fr; }
   .admin-sidebar { display: none; }

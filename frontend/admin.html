@@ -6,6 +6,11 @@
   <title>Admin Panel — Masket</title>
   <link rel="stylesheet" href="/css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+  .stat-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(23,85,244,0.15); }
+  .stat-card:active { transform: translateY(0px); }
+</style>
 </head>
 <body>
 
@@ -64,28 +69,28 @@
         </div>
 
         <div class="stats-grid">
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchSection('products')" style="cursor:pointer" title="View Products">
             <div class="stat-icon blue"><i class="ri-shopping-bag-3-line"></i></div>
             <div>
               <div class="stat-num" id="stat-products">—</div>
               <div class="stat-label">Total Products</div>
             </div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchSection('orders')" style="cursor:pointer" title="View Orders">
             <div class="stat-icon green"><i class="ri-file-list-3-line"></i></div>
             <div>
               <div class="stat-num" id="stat-orders">—</div>
               <div class="stat-label">Total Orders</div>
             </div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchSection('users')" style="cursor:pointer" title="View Users">
             <div class="stat-icon purple"><i class="ri-team-line"></i></div>
             <div>
               <div class="stat-num" id="stat-users">—</div>
               <div class="stat-label">Registered Users</div>
             </div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchSection('orders')" style="cursor:pointer" title="View Pending Orders">
             <div class="stat-icon orange"><i class="ri-time-line"></i></div>
             <div>
               <div class="stat-num" id="stat-pending">—</div>
@@ -182,10 +187,11 @@
                 <th>Phone</th>
                 <th>Location</th>
                 <th>Joined</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="users-tbody">
-              <tr><td colspan="5" style="text-align:center;padding:32px"><div class="spinner" style="margin:0 auto"></div></td></tr>
+              <tr><td colspan="6" style="text-align:center;padding:32px"><div class="spinner" style="margin:0 auto"></div></td></tr>
             </tbody>
           </table>
         </div>

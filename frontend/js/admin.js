@@ -196,16 +196,29 @@ function buildOrderRow(o) {
 
   tr.innerHTML = `
     <td style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px">#${o._id.slice(-8).toUpperCase()}</td>
-    <td><div style="font-weight:600">${o.user?.name||'Unknown'}</div><div style="font-size:12px;color:var(--text-muted)">${o.user?.email||''}</div></td>
+    <td><div style="font-weight:600">${o.user?.name||'Unknown'}</div><div style="font-size:12px;color:var(--text-muted)">${o.user?.email||'—'}</div><div style="font-size:12px;color:var(--text-muted)">${o.user?.phone||'—'}</div></td>
     <td style="font-size:12px">${date}</td>
     <td style="font-family:'Syne',sans-serif;font-weight:700">KSh ${Number(o.totalAmount).toLocaleString()}</td>
     <td><span class="badge ${statusColors[o.status]||'badge-gray'}">${capitalize(o.status)}</span></td>
     <td>
-      <select class="form-control" style="font-size:12px;padding:6px 8px;width:140px" onchange="updateOrderStatus('${o._id}', this.value)">
-        ${['pending','confirmed','processing','shipped','delivered','cancelled'].map(s => `<option value="${s}" ${s===o.status?'selected':''}>${capitalize(s)}</option>`).join('')}
-      </select>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select class="form-control" style="font-size:12px;padding:6px 8px;width:130px" onchange="updateOrderStatus('${o._id}', this.value)">
+          ${['pending','confirmed','processing','shipped','delivered','cancelled'].map(s => `<option value="${s}" ${s===o.status?'selected':''}>${capitalize(s)}</option>`).join('')}
+        </select>
+        <button class="btn btn-danger btn-sm" onclick="deleteOrder('${o._id}')" title="Delete Order"><i class="ri-delete-bin-line"></i></button>
+      </div>
     </td>`;
   return tr;
+}
+
+async function deleteOrder(id) {
+  if (!confirm('Delete this order permanently? This cannot be undone.')) return;
+  try {
+    await API.delete('/admin/orders/' + id);
+    showToast('Order deleted', 'info');
+    loadOrders();
+    loadStats();
+  } catch (err) { showToast(err.message, 'error'); }
 }
 
 async function updateOrderStatus(id, status) {
@@ -216,6 +229,16 @@ async function updateOrderStatus(id, status) {
   } catch (err) {
     showToast(err.message, 'error');
   }
+}
+
+async function deleteUser(id, name) {
+  if (!confirm('Delete user "' + name + '"? This cannot be undone.')) return;
+  try {
+    await API.delete('/admin/users/' + id);
+    showToast('"' + name + '" deleted', 'info');
+    loadUsers();
+    loadStats();
+  } catch (err) { showToast(err.message, 'error'); }
 }
 
 // ---- Contacts ----
@@ -274,7 +297,8 @@ async function loadUsers() {
         <td style="font-size:13px">${u.email}</td>
         <td style="font-size:13px">${u.phone || '—'}</td>
         <td style="font-size:13px">${u.residence || '—'}</td>
-        <td style="font-size:12px;color:var(--text-muted)">${date}</td>`;
+        <td style="font-size:12px;color:var(--text-muted)">${date}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteUser('${u._id}', '${u.name.replace(/'/g,"\\'")}')" title="Delete User"><i class="ri-delete-bin-line"></i></button></td>`;
       tbody.appendChild(tr);
     });
   } catch (err) {
@@ -299,3 +323,5 @@ window.deleteProduct = deleteProduct;
 window.updateOrderStatus = updateOrderStatus;
 window.markRead = markRead;
 window.switchSection = switchSection;
+window.deleteOrder = deleteOrder;
+window.deleteUser = deleteUser;
