@@ -568,7 +568,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 
 }
 .product-card:hover {
-  border-color: var(--blue);
+  border-color:red;
   box-shadow: var(--shadow-md);
   transform: translateY(-4px);
 }
@@ -604,7 +604,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 .product-category {
   font-size: 11px;
   font-weight: 600;
-  color: var(--blue);
+  color:orange;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 4px;
@@ -621,7 +621,7 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   overflow: hidden;
 }
 .product-short-desc {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--text-muted);
   flex: 1;
   display: -webkit-box;
@@ -637,16 +637,16 @@ textarea.form-control { resize: vertical; min-height: 100px; }
   margin-top: auto;
 }
 .product-price {
-  font-family: 'Syne', sans-serif;
+  font-family:normal;
   font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
+  font-weight: 700;
+  color: red;
 }
 .product-price span { font-size: 13px; font-weight: 500; color: var(--text-muted); }
 .add-to-cart-btn {
   width: 36px; height: 36px;
   border-radius: 50%;
-  background: var(--blue);
+  background:orangered;
   color: #fff;
   border: none;
   display: flex;
@@ -748,14 +748,15 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 }
 .qty-ctrl button:hover { background: var(--gray-100); color: var(--blue); }
 .qty-ctrl span { min-width: 28px; text-align: center; font-weight: 600; font-size: 14px; }
-.cart-item-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; white-space: nowrap; }
+.cart-item-price { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; white-space: nowrap; margin-right: 60px; }
 .cart-item-remove {
   width: 28px; height: 28px;
   border: none;
   background: none;
-  color: var(--gray-400);
+  color:red;
+  margin-right: 90px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20px;
   border-radius: 4px;
   display: flex;
   align-items: center;
